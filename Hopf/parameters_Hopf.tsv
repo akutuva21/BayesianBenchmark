@@ -1,7 +1,7 @@
 parameterId	parameterScale	lowerBound	upperBound	nominalValue	estimate
-kA	lin	0.38	38	3.8	1
-k2	lin	1e-01	10.0	1	1
-k3	lin	1e-01	10.0	1	1
-k4	lin	1e-01	10.0	1	1
-k5	lin	1e-01	10.0	1	1
-dummy	lin	1e-01	10	1	1
+kA	lin	1e-05	100000.0		1
+k2	lin	1e-05	100000.0		1
+k3	lin	1e-05	100000.0	1	0
+k4	lin	1e-05	100000.0	1	0
+k5	lin	1e-05	100000.0	1	0
+dummy	lin	1e-05	100000.0	1	0

@@ -30,9 +30,6 @@
       <parameter id="X2" constant="false"/>
       <parameter id="X3" constant="false"/>
     </listOfParameters>
-    <listOfInitialAssignments>
-      <!-- All initial values -->
-    </listOfInitialAssignments>
     <listOfRules>
       <!-- Observables -->
       <assignmentRule variable="X1">
