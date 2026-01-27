@@ -1,10 +1,22 @@
 import os
 import numpy as np
 from scipy.stats import qmc
+from typing import Any
 from bayesianinference import BayesianInference
 from modelproblem import ModelProblem
-import pypesto.sample as sample
-from pypesto.sample.geweke_test import burn_in_by_sequential_geweke
+
+# Optional dependency: pypesto. Import defensively to keep lint checks happy
+try:
+    import pypesto.sample as sample  # type: ignore
+    from pypesto.sample.geweke_test import burn_in_by_sequential_geweke  # type: ignore
+except Exception:
+    sample: Any = None
+    def burn_in_by_sequential_geweke(chain: np.ndarray) -> int:
+        # Fallback stub for environments without pypesto; returns 0 burn-in
+        return 0
+
+if sample is None:
+    raise ImportError("pestoSampler requires pypesto. Install with: pip install pypesto")
 
 class pestoSampler(BayesianInference):
 	def __init__(
@@ -26,7 +38,12 @@ class pestoSampler(BayesianInference):
 
 		lbs = [x[0] for x in mod_prob.bounds]
 		ubs = [x[1] for x in mod_prob.bounds]
-		lhs = qmc.LatinHypercube(d=mod_prob.n_dim, seed=self.seed)
+		# Compatibility across SciPy versions for RNG arg name
+		# Try common argument names for SciPy qmc (seed vs random_state)
+		try:
+			lhs = qmc.LatinHypercube(d=mod_prob.n_dim, seed=self.seed)  # type: ignore[arg-type]
+		except TypeError:
+			lhs = qmc.LatinHypercube(d=mod_prob.n_dim, random_state=self.seed)  # type: ignore[arg-type]
 		scale_x0 = lhs.random(n=self.n_chains)
 		x0 = qmc.scale(scale_x0, l_bounds=lbs, u_bounds=ubs)
 		#print(f"Original x0: {x0}")
