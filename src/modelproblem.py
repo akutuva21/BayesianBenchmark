@@ -1,3 +1,4 @@
+import os
 import petab
 from petab.v1.parameters import get_priors_from_df
 from scipy.stats import uniform, norm
@@ -8,8 +9,15 @@ class ModelProblem():
 
 	def initialize(self):
 		model_name =  self.model_name
-	   
-		petab_yaml = f"./{model_name}/{model_name}.yaml"
+
+		# Find project root (look for models/ directory)
+		if os.path.exists(f"./models/{model_name}"):
+			petab_yaml = f"./models/{model_name}/{model_name}.yaml"
+		elif os.path.exists(f"../models/{model_name}"):
+			petab_yaml = f"../models/{model_name}/{model_name}.yaml"
+		else:
+			raise FileNotFoundError(f"Could not find model directory for {model_name}")
+
 		petab_problem = petab.v1.Problem.from_yaml(petab_yaml)
 		importer = pypesto_rr.PetabImporterRR(petab_problem)
 		problem = importer.create_problem()

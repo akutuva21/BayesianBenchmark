@@ -24,9 +24,9 @@ for prob in "${probs[@]}"; do
 			out_file="$logdir${job_name}.out"
 			err_file="$logdir${job_name}.err"
 
-			command="sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble bigmem_slurm_job.sh"
+			command="sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble scripts/bigmem_slurm_job.sh"
 			echo "$command"
-			sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble bigmem_slurm_job.sh
+			sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble scripts/bigmem_slurm_job.sh
 			#bash single_slurm_job.sh
 
 		done 

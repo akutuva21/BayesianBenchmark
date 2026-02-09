@@ -1,10 +1,12 @@
 #!/bin/bash
 
-seeds=({0..99..1})
-declare -a probs=("Hopf")
-declare -a methods=("smc" "pmc")
+seeds=({0..10..1})
+declare -a probs=("Neg_Feed_Oscillate")
+declare -a methods=("ptmcmc")
 n_ensemble=1000
+n_iter=1250000
 ##### Declare anything else needed to pass as an arg below
+n_chains=10
 
 for prob in "${probs[@]}"; do
 	for method in "${methods[@]}"; do
@@ -24,9 +26,9 @@ for prob in "${probs[@]}"; do
 			out_file="$logdir${job_name}.out"
 			err_file="$logdir${job_name}.err"
 
-			command="sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble single_slurm_job.sh"
+			command="sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble,n_iter=$n_iter,n_chains=$n_chains scripts/ptmcmc_slurm_job.sh"
 			echo "$command"
-			sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble single_slurm_job.sh
+			sbatch --job-name=$job_name --output=$out_file --error=$err_file --export=method=$method,problem=$prob,seed=$seed,output_dir=$outdir,n_ensemble=$n_ensemble,n_iter=$n_iter,n_chains=$n_chains scripts/ptmcmc_slurm_job.sh
 			#bash single_slurm_job.sh
 
 		done 
